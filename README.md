@@ -1,47 +1,72 @@
-# CyberSecurity Course 🛡️
+# Cybersecurity Course
 
-Interactive presentation decks and publication-grade PDF reference guides for the Cybersecurity Mentorship Series, instructed by **Yahya Zaghloul**.
+Interactive presentation decks and technical reference manuals for the Cybersecurity Mentorship Series, instructed by **Yahya Zaghloul**.
 
 ---
 
-## 📚 Curriculum & Sessions
+## Curriculum Overview
 
-| Session | Topic | Presentation Deck | Reference Guide |
+| Session | Topic | Slide Deck | Reference Guide |
 | :--- | :--- | :---: | :---: |
-| **Session 0x01** | **Intro to InfoSec & Linux Fundamentals**<br>Core security principles (CIA triad, defense-in-depth), Linux hierarchy, file permissions (`chmod`/`chown`), process management, network diagnostics, and shell fundamentals. | [Launch Slides](Session1/index.html) | [Download PDF](Session1/Session1_Linux_Fundamentals.pdf) |
+| **Session 0x01** | **Intro to InfoSec & Linux Fundamentals**<br>Core security principles (CIA triad, defense-in-depth), Linux directory hierarchy, file permissions (`chmod`/`chown`), process management, network diagnostics, and shell fundamentals. | [Launch Slides](Session1/index.html) | [Download PDF](Session1/Session1_Linux_Fundamentals.pdf) |
 | **Session 0x02** | **Windows Architecture & Dual CLI Arsenal**<br>Windows NT architecture, privilege rings, SAM database, security architecture, Command Prompt vs. PowerShell piping, and core sysadmin commands. | [Launch Slides](Session2/index.html) | [Download PDF](Session2/Session2_Windows_Fundamentals.pdf) |
 
 ---
 
-## 🚀 How to Use the Presentations
+## Getting Started
 
-Each session slide deck is self-contained and runs directly in any modern web browser without requiring a server or external runtime.
+### Local Setup
 
-### Running Slides Locally:
-1. Clone or download this repository:
-   ```bash
-   git clone https://github.com/<your-username>/CyberSecurity-Course.git
-   cd CyberSecurity-Course
-   ```
-2. Double-click or open `index.html` inside any session folder (`Session1/index.html`, `Session2/index.html`) in your browser (Chrome, Edge, Firefox, Safari).
+Clone the repository to your local environment:
 
-### Deck Controls:
-- **`Right Arrow` / `Space` / `Page Down`**: Advance to the next slide
-- **`Left Arrow` / `Page Up`**: Go back to the previous slide
-- **`Home` / `End`**: Jump to the first or last slide
-- **`F`**: Toggle full-screen mode
+```bash
+git clone https://github.com/YahyaZaghloul/CyberSecurity-Course.git
+cd CyberSecurity-Course
+```
+
+All slide decks are self-contained and run directly in any standard web browser without external runtime dependencies or local servers. Open the respective `index.html` file in your browser:
+
+- **Session 1:** `Session1/index.html`
+- **Session 2:** `Session2/index.html`
+
+### Slide Navigation Controls
+
+| Key Binding | Action |
+| :--- | :--- |
+| `Right Arrow` / `Space` / `Page Down` | Advance to next slide |
+| `Left Arrow` / `Page Up` | Return to previous slide |
+| `Home` / `End` | Jump to first / last slide |
+| `F` | Toggle fullscreen mode |
 
 ---
 
-## 📄 Student Reference Handouts (PDF)
+## Technical Reference Handouts
 
-Each session includes a dark-themed student guide covering command cheat sheets, architecture diagrams, lab challenges, and key takeaways:
-- [Session 1: Linux Fundamentals Guide (PDF)](Session1/Session1_Linux_Fundamentals.pdf)
+Each session includes a comprehensive technical reference manual designed for practical lab execution and revision:
+
+- [Session 1: Linux Fundamentals & Lab Guide (PDF)](Session1/Session1_Linux_Fundamentals.pdf)
 - [Session 2: Windows Fundamentals & CLI Arsenal Guide (PDF)](Session2/Session2_Windows_Fundamentals.pdf)
 
 ---
 
-## 👤 Instructor
+## Repository Structure
+
+```text
+CyberSecurity-Course/
+├── Session1/
+│   ├── index.html                           # Presentation deck (Linux)
+│   ├── handout.html                         # Interactive student lab guide
+│   └── Session1_Linux_Fundamentals.pdf      # Technical reference manual (PDF)
+├── Session2/
+│   ├── index.html                           # Presentation deck (Windows)
+│   ├── handout.html                         # Interactive student lab guide
+│   └── Session2_Windows_Fundamentals.pdf    # Technical reference manual (PDF)
+└── README.md
+```
+
+---
+
+## Instructor
 
 **Yahya Zaghloul**  
-*Cybersecurity Specialist & Mentorship Series Lead*
+Cybersecurity Researcher & Penetration Tester
