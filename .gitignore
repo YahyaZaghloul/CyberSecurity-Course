@@ -1,0 +1,16 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Generator / build scripts and scratch files
+*.py
+handout.html
+*.ps
+*.tmp
+
+# Operating System & IDE artifacts
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

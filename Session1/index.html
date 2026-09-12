@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 0x01: Intro to InfoSec & Linux Fundamentals | Yahya Zaghloul</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            red: '#e50914',
+                            darkred: '#8b0000',
+                            bg: '#050505',
+                            panel: '#101010',
+                            border: '#262626'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Presentation Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Subtle Background Overlays -->
+    <div class="cyber-grid"></div>
+    <div class="scanline"></div>
+
+    <!-- Progress Indicator Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- Presentation Slides Viewport -->
+    <main id="presentation-deck">
+
+        <!-- SLIDE 01: TITLE -->
+        <section class="slide active" id="slide-01">
+            <div class="my-auto text-center space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-red/10 border border-cyber-red/40 text-cyber-red font-mono text-xs uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-cyber-red animate-ping"></span>
+                    Cybersecurity Academy // Module 0x01
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight uppercase font-mono">
+                    Intro to <span class="text-cyber-red">InfoSec</span> & <br class="hidden sm:inline">Linux Fundamentals
+                </h1>
+
+                <p class="max-w-2xl mx-auto text-gray-400 font-mono text-sm sm:text-base leading-relaxed">
+                    Operating Systems Architecture, Kernel Space vs. User Space, Filesystem Hierarchy, and Core Command Line Primitives.
+                </p>
+
+                <div class="pt-6 border-t border-cyber-border max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-gray-400">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-terminal text-cyber-red"></i>
+                        <span>Instructor: <strong class="text-white">Yahya Zaghloul</strong></span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-halved text-cyber-darkred"></i>
+                        <span>Track: <span class="text-gray-300">Systems & Offensive Security</span></span>
+                    </div>
+                </div>
+
+                <div class="text-[0.7rem] text-gray-600 font-mono">
+                    Press <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">Space</kbd> or <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">→</kbd> to navigate &bull; <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">F</kbd> for fullscreen
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 02: INSTRUCTOR INTRO -->
+        <section class="slide" id="slide-02">
+            <div class="slide-category"><i class="fas fa-user-shield"></i> Introduction</div>
+            <h2 class="slide-title">> whoami</h2>
+
+            <div class="grid md:grid-cols-12 gap-8 my-auto items-center">
+                <div class="md:col-span-5 space-y-4">
+                    <div class="border border-cyber-border bg-black/60 p-6 relative">
+                        <div class="absolute -top-3 left-4 bg-cyber-red px-2 py-0.5 text-black font-mono text-[0.65rem] font-bold uppercase tracking-wider">
+                            Instructor Profile
+                        </div>
+                        <h3 class="text-2xl font-bold text-white font-mono uppercase">Yahya Zaghloul</h3>
+                        <p class="text-cyber-red font-mono text-sm mb-4">Cybersecurity Researcher & Penetration Tester</p>
+                        
+                        <div class="space-y-2 font-mono text-xs text-gray-300">
+                            <p><span class="text-cyber-darkred">></span> 4th Year Computer Science @ SAMS</p>
+                            <p><span class="text-cyber-darkred">></span> Offensive Security & Vulnerability Research</p>
+                            <p><span class="text-cyber-darkred">></span> Hack The Box: <strong class="text-white">Skilled (Lvl 31)</strong></p>
+                            <p><span class="text-cyber-darkred">></span> Network Hardening & Custom Exploit Scripting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7 space-y-4 font-mono text-sm">
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">instruction_mindset.sh</span>
+                            <div class="terminal-dots">
+                                <span class="terminal-dot red"></span>
+                                <span class="terminal-dot yellow"></span>
+                                <span class="terminal-dot green"></span>
+                            </div>
+                        </div>
+                        <div class="terminal-body space-y-3">
+                            <p class="text-gray-300">
+                                <span class="text-cyber-red font-bold">1. Learn to Learn:</span> In cybersecurity, tools change constantly. Concepts, operating system internals, and manual inspection skills never become obsolete.
+                            </p>
+                            <p class="text-gray-300">
+                                <span class="text-cyber-red font-bold">2. Self-Reliance:</span> You do not become a hacker by memorizing flags. You become one by reading manual pages (`man`), analyzing errors, and testing hypotheses.
+                            </p>
+                            <p class="text-gray-300">
+                                <span class="text-cyber-red font-bold">3. The Linux Standard:</span> The Linux terminal is not optional—it is the native operational environment of the internet, cloud infrastructure, and security toolchains.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 03: STUDENT ICEBREAKER -->
+        <section class="slide" id="slide-03">
+            <div class="slide-category"><i class="fas fa-users"></i> Classroom Engagement</div>
+            <h2 class="slide-title">> whoami --class</h2>
+
+            <div class="space-y-6 my-auto">
+                <p class="text-gray-300 text-sm font-mono">
+                    Before we dive in, let's hear from everyone. Introduce yourself around the room using these 4 checkpoints:
+                </p>
+
+                <div class="grid md:grid-cols-4 gap-4">
+                    <div class="terminal-card p-4 border border-cyber-border">
+                        <div class="text-cyber-red font-mono text-xs font-bold mb-1">FIELD 0x01</div>
+                        <h4 class="text-white font-mono text-sm font-semibold mb-2">Name & Background</h4>
+                        <p class="text-gray-400 text-xs font-sans">What are you studying, and what drove your interest into cybersecurity?</p>
+                    </div>
+
+                    <div class="terminal-card p-4 border border-cyber-border">
+                        <div class="text-cyber-red font-mono text-xs font-bold mb-1">FIELD 0x02</div>
+                        <h4 class="text-white font-mono text-sm font-semibold mb-2">Primary OS</h4>
+                        <p class="text-gray-400 text-xs font-sans">Windows 10/11, macOS, dual-boot Linux, or WSL? Any past terminal experience?</p>
+                    </div>
+
+                    <div class="terminal-card p-4 border border-cyber-border">
+                        <div class="text-cyber-red font-mono text-xs font-bold mb-1">FIELD 0x03</div>
+                        <h4 class="text-white font-mono text-sm font-semibold mb-2">Target Specialization</h4>
+                        <p class="text-gray-400 text-xs font-sans">Penetration Testing, SOC Analysis, Malware Analysis, Cloud, or Bug Bounty?</p>
+                    </div>
+
+                    <div class="terminal-card p-4 border border-cyber-border">
+                        <div class="text-cyber-red font-mono text-xs font-bold mb-1">FIELD 0x04</div>
+                        <h4 class="text-white font-mono text-sm font-semibold mb-2">Course Objective</h4>
+                        <p class="text-gray-400 text-xs font-sans">What concrete capability do you want to master by the end of this curriculum?</p>
+                    </div>
+                </div>
+
+                <div class="callout-box font-mono text-xs">
+                    <strong class="text-white">Note:</strong> No prior terminal knowledge is required. We start from foundational fundamentals and build up to professional system command operations.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 04: WHAT IS INFOSEC? -->
+        <section class="slide" id="slide-04">
+            <div class="slide-category"><i class="fas fa-lock"></i> Foundations</div>
+            <h2 class="slide-title">What is Information Security?</h2>
+
+            <div class="grid md:grid-cols-12 gap-8 my-auto">
+                <div class="md:col-span-6 space-y-4">
+                    <h3 class="text-white font-mono text-lg font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> The CIA Triad
+                    </h3>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Security is the process of managing risk to critical assets while preserving functionality:
+                    </p>
+
+                    <div class="space-y-3 font-mono text-xs">
+                        <div class="border border-cyber-border p-3 bg-black/40">
+                            <span class="text-cyber-red font-bold">Confidentiality:</span> Data is protected from unauthorized disclosure. (Encryption, ACLs).
+                        </div>
+                        <div class="border border-cyber-border p-3 bg-black/40">
+                            <span class="text-cyber-red font-bold">Integrity:</span> Data is preserved against unauthorized tampering or modification. (Hashes, signatures).
+                        </div>
+                        <div class="border border-cyber-border p-3 bg-black/40">
+                            <span class="text-cyber-red font-bold">Availability:</span> Systems and data remain operational and accessible when needed. (Redundancy, resilience).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-6 space-y-4">
+                    <h3 class="text-white font-mono text-lg font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> The Risk Model
+                    </h3>
+
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">security_equation.txt</span>
+                        </div>
+                        <div class="terminal-body text-xs font-mono space-y-3 text-gray-300">
+                            <p class="text-cyber-red font-bold text-sm">Risk = Threat × Vulnerability × Impact</p>
+                            <hr class="border-cyber-border">
+                            <p><strong>Vulnerability:</strong> A security weakness or bug in software, configuration, or human protocol.</p>
+                            <p><strong>Threat Actor:</strong> The entity possessing the intent and capability to target that weakness.</p>
+                            <p><strong>Exploit:</strong> The method or code used to trigger the vulnerability for unauthorized gain.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 05: OFFENSIVE VS DEFENSIVE -->
+        <section class="slide" id="slide-05">
+            <div class="slide-category"><i class="fas fa-chess"></i> Industry Perspectives</div>
+            <h2 class="slide-title">Offensive vs. Defensive Security</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto">
+                <div class="border border-cyber-red/50 bg-black/50 p-6 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-mono font-bold text-cyber-red uppercase">Red Team / Offensive</h3>
+                        <i class="fas fa-crosshairs text-2xl text-cyber-red"></i>
+                    </div>
+                    <p class="text-xs font-mono text-gray-400">Simulate real-world adversary behavior to discover exposure before hostile actors do.</p>
+                    <ul class="space-y-2 text-xs font-mono text-gray-300">
+                        <li><i class="fas fa-angle-right text-cyber-red mr-2"></i>Penetration Testing & Red Teaming</li>
+                        <li><i class="fas fa-angle-right text-cyber-red mr-2"></i>Web & API Vulnerability Research</li>
+                        <li><i class="fas fa-angle-right text-cyber-red mr-2"></i>Privilege Escalation & Lateral Movement</li>
+                        <li><i class="fas fa-angle-right text-cyber-red mr-2"></i>Exploit Scripting & Security Tooling</li>
+                    </ul>
+                </div>
+
+                <div class="border border-blue-900/60 bg-black/50 p-6 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xl font-mono font-bold text-blue-400 uppercase">Blue Team / Defensive</h3>
+                        <i class="fas fa-shield text-2xl text-blue-400"></i>
+                    </div>
+                    <p class="text-xs font-mono text-gray-400">Monitor, detect, analyze, and neutralize active threats across enterprise environments.</p>
+                    <ul class="space-y-2 text-xs font-mono text-gray-300">
+                        <li><i class="fas fa-angle-right text-blue-400 mr-2"></i>Security Operations Center (SOC) & SIEM</li>
+                        <li><i class="fas fa-angle-right text-blue-400 mr-2"></i>Digital Forensics & Incident Response (DFIR)</li>
+                        <li><i class="fas fa-angle-right text-blue-400 mr-2"></i>Threat Hunting & Detection Engineering</li>
+                        <li><i class="fas fa-angle-right text-blue-400 mr-2"></i>Network Hardening & Firewall Architecture</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="callout-box font-mono text-xs mt-6">
+                <strong class="text-cyber-red">Axiom:</strong> You cannot defend what you don't know how to break, and you cannot break what you don't understand how to build.
+            </div>
+        </section>
+
+        <!-- SLIDE 06: WHY LINUX? -->
+        <section class="slide" id="slide-06">
+            <div class="slide-category"><i class="fab fa-linux"></i> Operating Systems</div>
+            <h2 class="slide-title">Why Linux is the Hacker's Operating System</h2>
+
+            <div class="grid md:grid-cols-3 gap-6 my-auto font-mono">
+                <div class="terminal-card p-5 border border-cyber-border space-y-3">
+                    <div class="text-cyber-red text-2xl"><i class="fas fa-microchip"></i></div>
+                    <h3 class="text-white font-bold text-sm">Low-Level System Control</h3>
+                    <p class="text-gray-400 text-xs font-sans leading-relaxed">
+                        Raw socket craft, packet injection, and direct memory & process manipulation without OS abstraction layers blocking access.
+                    </p>
+                </div>
+
+                <div class="terminal-card p-5 border border-cyber-border space-y-3">
+                    <div class="text-cyber-red text-2xl"><i class="fas fa-code-branch"></i></div>
+                    <h3 class="text-white font-bold text-sm">Full Source Transparency</h3>
+                    <p class="text-gray-400 text-xs font-sans leading-relaxed">
+                        Zero black-box logic. Every system call, kernel module, and network driver is open, readable, and completely customizable.
+                    </p>
+                </div>
+
+                <div class="terminal-card p-5 border border-cyber-border space-y-3">
+                    <div class="text-cyber-red text-2xl"><i class="fas fa-server"></i></div>
+                    <h3 class="text-white font-bold text-sm">Servers & Cloud Reality</h3>
+                    <p class="text-gray-400 text-xs font-sans leading-relaxed">
+                        Over 96% of enterprise cloud workloads, production web servers, firewalls, and IoT devices run Linux. It is both the defensive bastion and primary target.
+                    </p>
+                </div>
+            </div>
+
+            <div class="callout-box font-mono text-xs">
+                In security, GUIs hide essential diagnostic details. The Command Line Interface (CLI) gives you precision, speed, and automation.
+            </div>
+        </section>
+
+        <!-- SLIDE 07: WHAT IS AN OS? -->
+        <section class="slide" id="slide-07">
+            <div class="slide-category"><i class="fas fa-sitemap"></i> Systems Architecture</div>
+            <h2 class="slide-title">What is an Operating System?</h2>
+
+            <div class="space-y-6 my-auto">
+                <p class="text-gray-300 text-sm">
+                    An Operating System manages computer hardware resources and arbitrates requests between programs and physical silicon.
+                </p>
+
+                <!-- Layer Diagram -->
+                <div class="space-y-2 font-mono text-xs max-w-3xl mx-auto">
+                    <div class="border border-cyber-border bg-black/60 p-3 flex justify-between items-center">
+                        <span class="text-white font-bold">USER SPACE: Applications & CLI</span>
+                        <span class="text-gray-500">Browser, Bash, Python, Nmap, SSH Client</span>
+                    </div>
+                    <div class="text-center text-cyber-red font-bold"><i class="fas fa-arrow-down"></i> System Calls (`open`, `read`, `write`, `socket`) <i class="fas fa-arrow-up"></i></div>
+                    <div class="border border-cyber-red bg-cyber-red/10 p-3 flex justify-between items-center">
+                        <span class="text-cyber-red font-bold">KERNEL SPACE: The Operating System Core</span>
+                        <span class="text-gray-300">Process Scheduler, Memory Manager, Virtual File System, Network Stack</span>
+                    </div>
+                    <div class="text-center text-cyber-darkred font-bold"><i class="fas fa-arrow-down"></i> Device Drivers <i class="fas fa-arrow-up"></i></div>
+                    <div class="border border-cyber-border bg-black/80 p-3 flex justify-between items-center">
+                        <span class="text-gray-400 font-bold">PHYSICAL HARDWARE</span>
+                        <span class="text-gray-500">CPU (x86_64/ARM), RAM, NVMe/SATA Disks, Network Interface (NIC)</span>
+                    </div>
+                </div>
+
+                <p class="text-xs text-gray-400 font-mono text-center">
+                    User applications never touch hardware directly. They interact strictly via Kernel System Calls.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 08: KERNEL VS USER SPACE & SHELL -->
+        <section class="slide" id="slide-08">
+            <div class="slide-category"><i class="fas fa-terminal"></i> Core Mechanics</div>
+            <h2 class="slide-title">Kernel Space, User Space & The Shell</h2>
+
+            <div class="grid md:grid-cols-2 gap-8 my-auto font-mono">
+                <div class="space-y-4 text-xs">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> Privilege Separation (Rings)
+                    </h3>
+                    <p class="text-gray-300 font-sans leading-relaxed">
+                        CPUs enforce privilege levels: <strong class="text-white">Ring 0</strong> (Kernel Space) has unlimited hardware control. <strong class="text-white">Ring 3</strong> (User Space) runs isolated user processes.
+                    </p>
+                    <div class="border border-cyber-border p-3 space-y-2 bg-black/40">
+                        <p><strong class="text-white">Bash:</strong> Bourne-Again Shell; standard default CLI across Linux distros.</p>
+                        <p><strong class="text-white">Zsh:</strong> Modern shell with rich completion; standard on Kali Linux & macOS.</p>
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">shell_repl_cycle.txt</span>
+                    </div>
+                    <div class="terminal-body text-xs space-y-2 text-gray-300">
+                        <p class="text-cyber-red font-bold">> Read-Eval-Print Loop (REPL):</p>
+                        <p>1. <span class="text-white font-semibold">Read:</span> Reads the text command entered by user.</p>
+                        <p>2. <span class="text-white font-semibold">Parse:</span> Splits into command name, options, and arguments.</p>
+                        <p>3. <span class="text-white font-semibold">Path Lookup:</span> Searches directories listed in <code class="text-cyber-red">$PATH</code>.</p>
+                        <p>4. <span class="text-white font-semibold">Fork & Exec:</span> Spawns a child process and invokes system calls.</p>
+                        <p>5. <span class="text-white font-semibold">Return:</span> Emits output and delivers an exit status code (<code class="text-green-400">$?</code>).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 09: FILESYSTEM HIERARCHY STANDARD (FHS) -->
+        <section class="slide" id="slide-09">
+            <div class="slide-category"><i class="fas fa-folder-tree"></i> Filesystem</div>
+            <h2 class="slide-title">Linux Filesystem Hierarchy Standard (FHS)</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <div class="callout-box">
+                    <strong class="text-white">Unix Philosophy:</strong> "Everything is a file" — disks, sockets, running processes, and configuration are all represented in the filesystem tree.
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-3">
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/ (Root)</div>
+                        <p class="text-gray-400 font-sans">The top-level root directory of the entire filesystem.</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/bin & /usr/bin</div>
+                        <p class="text-gray-400 font-sans">Essential user command binaries (<code class="text-gray-300">ls, cat, bash</code>).</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/etc</div>
+                        <p class="text-gray-400 font-sans">System-wide configuration files (<code class="text-gray-300">passwd, shadow, hosts</code>).</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/home & /root</div>
+                        <p class="text-gray-400 font-sans">Standard user homes (<code class="text-gray-300">/home/kali</code>) & superuser home (<code class="text-gray-300">/root</code>).</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/var/log</div>
+                        <p class="text-gray-400 font-sans">Dynamic system records, auth logs, syslog, and service logs.</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/tmp</div>
+                        <p class="text-gray-400 font-sans">Temporary scratch directory; world-writable by default.</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/dev</div>
+                        <p class="text-gray-400 font-sans">Device files mapping disks (<code class="text-gray-300">/dev/sda</code>, <code class="text-gray-300">/dev/urandom</code>).</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/proc</div>
+                        <p class="text-gray-400 font-sans">Pseudo-filesystem reflecting live kernel memory and active processes.</p>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold text-sm mb-1">/sbin</div>
+                        <p class="text-gray-400 font-sans">System administrative binaries reserved for root (<code class="text-gray-300">iptables, fdisk</code>).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: PERMISSIONS & SECURITY MODEL -->
+        <section class="slide" id="slide-10">
+            <div class="slide-category"><i class="fas fa-key"></i> Security Model</div>
+            <h2 class="slide-title">Linux Permissions & Ownership Model</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> Dissecting Permissions
+                    </h3>
+                    
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">ls -la breakdown</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-gray-300">
+                            <p class="text-cyber-red font-bold">- rwx r-x r--  1 root root  4096 Sep 12 secret.txt</p>
+                            <p>├── <strong class="text-white">[-]</strong> File Type (<code class="text-gray-300">-</code> = file, <code class="text-gray-300">d</code> = directory, <code class="text-gray-300">l</code> = symlink)</p>
+                            <p>├── <strong class="text-white">[rwx]</strong> Owner permissions (Read, Write, Execute)</p>
+                            <p>├── <strong class="text-white">[r-x]</strong> Group permissions (Read, Execute)</p>
+                            <p>└── <strong class="text-white">[r--]</strong> Others / World permissions (Read only)</p>
+                        </div>
+                    </div>
+
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <p><strong class="text-white">root (UID 0):</strong> The superuser. Has authority to override all permissions.</p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> Octal Notation (4 - 2 - 1)
+                    </h3>
+
+                    <div class="border border-cyber-border p-4 bg-black/40 space-y-2">
+                        <p><code class="text-cyber-red font-bold">r</code> (Read) = 4</p>
+                        <p><code class="text-cyber-red font-bold">w</code> (Write) = 2</p>
+                        <p><code class="text-cyber-red font-bold">x</code> (Execute) = 1</p>
+                        <hr class="border-cyber-border my-2">
+                        <p class="text-gray-400">Sum values per triplet:</p>
+                        <p><strong class="text-white">755:</strong> Owner rwx (7), Group rx (5), Others rx (5)</p>
+                        <p><strong class="text-white">600:</strong> Owner rw- (6), Group --- (0), Others --- (0)</p>
+                    </div>
+
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">permission_commands</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                        </div>
+                        <div class="terminal-body">
+                            <code>chmod 600 private_key<br>chown user:group filename</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11: THE GOLDEN RULE: HOW TO HELP YOURSELF -->
+        <section class="slide" id="slide-11">
+            <div class="slide-category"><i class="fas fa-book"></i> Self-Sufficiency</div>
+            <h2 class="slide-title">The Golden Rule: Self-Research & Manuals</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <div class="callout-box">
+                    <strong class="text-cyber-red">Instructor Rule:</strong> Never memorize flags. Know how to interrogate the system to find the flag you need within 5 seconds.
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">manual_commands.sh</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                        </div>
+                        <div class="terminal-body text-gray-300 space-y-3">
+                            <p><strong class="text-white">1. The Manual Page (man):</strong></p>
+                            <code>man find<br>man grep</code>
+                            <p class="text-gray-500 font-sans">Full documentation: press <kbd class="px-1 py-0.5 bg-black text-gray-300">/word</kbd> to search inside, <kbd class="px-1 py-0.5 bg-black text-gray-300">n</kbd> for next match, <kbd class="px-1 py-0.5 bg-black text-gray-300">q</kbd> to quit.</p>
+                            
+                            <p><strong class="text-white">2. Quick Help Flag (--help):</strong></p>
+                            <code>cat --help<br>ssh -h</code>
+                        </div>
+                    </div>
+
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">keyword_lookup.sh</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                        </div>
+                        <div class="terminal-body text-gray-300 space-y-3">
+                            <p><strong class="text-white">3. What does this command do? (whatis):</strong></p>
+                            <code>whatis chmod</code>
+                            <p class="text-gray-500 font-sans">Prints a concise one-line summary from the manual description.</p>
+
+                            <p><strong class="text-white">4. Search manuals by concept (apropos):</strong></p>
+                            <code>apropos "network routing"</code>
+                            <p class="text-gray-500 font-sans">Finds all command manuals matching a keyword or task.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: COMMAND CATEGORY 1: NAVIGATION & SYSTEM INFO -->
+        <section class="slide" id="slide-12">
+            <div class="slide-category"><i class="fas fa-compass"></i> Command Arsenal // Category 1</div>
+            <h2 class="slide-title">Navigation & System Information</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">system_info.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold">// System Identity & Session</p>
+                        <p><code class="text-white">whoami</code> : Current active username</p>
+                        <p><code class="text-white">id</code> : Current User ID (UID), Group ID (GID), and group memberships</p>
+                        <p><code class="text-white">uname -a</code> : Complete Linux kernel release, architecture (x86_64), and hostname</p>
+                        <p><code class="text-white">hostname</code> : Name assigned to the current host machine</p>
+                        <p><code class="text-white">history</code> : Chronological list of previously executed commands</p>
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">navigation.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold">// Directory Traversal</p>
+                        <p><code class="text-white">pwd</code> : Print working directory (current absolute path)</p>
+                        <p><code class="text-white">ls -la</code> : List all files, including hidden dotfiles and permission details</p>
+                        <p><code class="text-white">ls -lh</code> : List with human-readable file sizes (KB, MB, GB)</p>
+                        <p><code class="text-white">cd /path</code> : Change directory (<code class="text-gray-400">cd ..</code> = up one level, <code class="text-gray-400">cd ~</code> = home)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13: COMMAND CATEGORY 2: FILE & DIRECTORY MANIPULATION -->
+        <section class="slide" id="slide-13">
+            <div class="slide-category"><i class="fas fa-file-pen"></i> Command Arsenal // Category 2</div>
+            <h2 class="slide-title">File & Directory Manipulation</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">file_operations.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <p><code class="text-white">touch &lt;file&gt;</code> : Create an empty file or update timestamps</p>
+                                <p><code class="text-white">mkdir &lt;dir&gt;</code> : Create a new directory</p>
+                                <p><code class="text-white">mkdir -p a/b/c</code> : Create parent directories recursively</p>
+                                <p><code class="text-white">cp src dst</code> : Copy a file</p>
+                                <p><code class="text-white">cp -r dir1 dir2</code> : Copy a directory recursively</p>
+                            </div>
+                            <div>
+                                <p><code class="text-white">mv old new</code> : Move or rename files and directories</p>
+                                <p><code class="text-white">rm &lt;file&gt;</code> : Remove/delete a file</p>
+                                <p><code class="text-white">rm -rf &lt;dir&gt;</code> : Force recursive deletion of a directory (Caution!)</p>
+                                <p><code class="text-white">ln -s target link</code> : Create a symbolic shortcut link</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">Escaping Filenames Starting with '-'</div>
+                        <p class="text-gray-400 font-sans mb-1">The argument parser confuses leading hyphens with command flags:</p>
+                        <code>cat ./-filename &bull; rm ./-filename</code>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">Filenames with Spaces</div>
+                        <p class="text-gray-400 font-sans mb-1">Use double quotes or backslash escape characters:</p>
+                        <code>cat "file name.txt" &bull; cat file\ name.txt</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: COMMAND CATEGORY 3: READING & INSPECTING FILES -->
+        <section class="slide" id="slide-14">
+            <div class="slide-category"><i class="fas fa-eye"></i> Command Arsenal // Category 3</div>
+            <h2 class="slide-title">Reading & Inspecting File Content</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">content_viewers.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p><code class="text-white">cat &lt;file&gt;</code> : Concatenate and display full file content</p>
+                        <p><code class="text-white">less &lt;file&gt;</code> : Paginated interactive viewer (ideal for massive logs; <kbd class="px-1 bg-black text-gray-300">q</kbd> to exit)</p>
+                        <p><code class="text-white">head -n 10 file</code> : Output the first 10 lines of a file</p>
+                        <p><code class="text-white">tail -n 10 file</code> : Output the last 10 lines of a file</p>
+                        <p><code class="text-white">tail -f logfile</code> : Follow file updates live in real-time</p>
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">analysis_tools.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p><code class="text-white">file &lt;file&gt;</code> : Determine true MIME type using Magic Bytes</p>
+                        <p class="text-gray-500 font-sans">Identifies if a file is ASCII text, an ELF binary, or gzip data regardless of its file extension.</p>
+                        
+                        <p><code class="text-white">wc -l &lt;file&gt;</code> : Count total lines in a file</p>
+                        <p><code class="text-white">wc -c &lt;file&gt;</code> : Count total bytes in a file</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15: COMMAND CATEGORY 4: SEARCHING & LOCATING ASSETS -->
+        <section class="slide" id="slide-15">
+            <div class="slide-category"><i class="fas fa-magnifying-glass"></i> Command Arsenal // Category 4</div>
+            <h2 class="slide-title">Searching & Locating Assets</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">find_command_anatomy</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold text-sm">find [starting_path] [predicates/filters]</p>
+                        <div class="grid md:grid-cols-2 gap-4 pt-1">
+                            <div>
+                                <p><code class="text-white">-name "pattern"</code> : Filter by filename (wildcards allowed)</p>
+                                <p><code class="text-white">-iname "pattern"</code> : Case-insensitive name filter</p>
+                                <p><code class="text-white">-type f</code> : Match regular files only</p>
+                                <p><code class="text-white">-type d</code> : Match directories only</p>
+                            </div>
+                            <div>
+                                <p><code class="text-white">-size 1033c</code> : Exact size of 1033 bytes (<code class="text-gray-400">c</code>=bytes, <code class="text-gray-400">k</code>=KB, <code class="text-gray-400">M</code>=MB)</p>
+                                <p><code class="text-white">-user &lt;name&gt;</code> : Owned by specific username</p>
+                                <p><code class="text-white">-group &lt;name&gt;</code> : Owned by specific group</p>
+                                <p><code class="text-white">! -executable</code> : Invert match (NOT executable)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">which & whereis</div>
+                        <p class="text-gray-400 font-sans mb-1">Locate command binaries in your PATH environment:</p>
+                        <code>which python3 &bull; whereis bash</code>
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">locate / mlocate</div>
+                        <p class="text-gray-400 font-sans mb-1">Blazing-fast pre-indexed filesystem database search:</p>
+                        <code>locate rockyou.txt</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 16: COMMAND CATEGORY 5: I/O STREAMS & REDIRECTION -->
+        <section class="slide" id="slide-16">
+            <div class="slide-category"><i class="fas fa-arrows-split-up-and-left"></i> Command Arsenal // Category 5</div>
+            <h2 class="slide-title">Standard Streams & I/O Redirection</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="space-y-3">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> The 3 POSIX Standard Streams
+                    </h3>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <span class="text-cyber-red font-bold">FD 0 (stdin):</span> Standard Input (keyboard by default).
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <span class="text-cyber-red font-bold">FD 1 (stdout):</span> Standard Output (terminal display).
+                    </div>
+                    <div class="border border-cyber-border p-3 bg-black/40">
+                        <span class="text-cyber-red font-bold">FD 2 (stderr):</span> Standard Error (error diagnostic stream).
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">redirection_syntax.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-2">
+                        <p><code class="text-white">&gt; file</code> : Overwrite stdout into file</p>
+                        <p><code class="text-white">&gt;&gt; file</code> : Append stdout to the end of file</p>
+                        <p><code class="text-white">&lt; file</code> : Read stdin from file</p>
+                        <p><code class="text-white">2&gt; /dev/null</code> : Discard all error messages into the void</p>
+                        <p><code class="text-white">2&gt;&amp;1</code> : Combine stderr into stdout</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callout-box font-mono text-xs mt-4">
+                When searching large system trees as an unprivileged user, suppress error clutter: <code class="text-cyber-red">find / -type f -name secret 2>/dev/null</code>
+            </div>
+        </section>
+
+        <!-- SLIDE 17: COMMAND CATEGORY 6: PIPELINES & TEXT PROCESSING -->
+        <section class="slide" id="slide-17">
+            <div class="slide-category"><i class="fas fa-filter"></i> Command Arsenal // Category 6</div>
+            <h2 class="slide-title">Pipelines & Text Processing</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> The Pipe Operator (`|`)
+                    </h3>
+                    <p class="text-gray-300 font-sans leading-relaxed">
+                        The pipe (<code class="text-cyber-red font-bold">|</code>) connects the stdout of one program directly into the stdin of another. Chaining modular tools creates powerful one-line investigative engines.
+                    </p>
+                    
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-gray-400">sort_uniq_pipeline.sh</span>
+                            <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                        </div>
+                        <div class="terminal-body text-gray-300 space-y-2">
+                            <p class="text-gray-500"># Find lines that occur strictly once:</p>
+                            <code>sort data.txt | uniq -u</code>
+                            <p class="text-gray-500 font-sans text-[0.7rem] pt-1">Note: <code class="text-gray-300">uniq</code> only checks adjacent lines, so sorting beforehand is required!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">grep_and_cut.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold">// grep: Global Regular Expression Print</p>
+                        <p><code class="text-white">grep "pattern" file</code> : Find matching lines</p>
+                        <p><code class="text-white">grep -i "token" file</code> : Case-insensitive search</p>
+                        <p><code class="text-white">grep -n "token" file</code> : Include line numbers</p>
+                        <p><code class="text-white">grep -v "token" file</code> : Invert match (show non-matches)</p>
+                        
+                        <p class="text-cyber-red font-bold pt-1">// cut: Extract Delimited Columns</p>
+                        <p><code class="text-white">cut -d ":" -f 1 /etc/passwd</code> : Extract usernames</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 18: COMMAND CATEGORY 7: DATA EXTRACTION, ARCHIVES & NETWORKING -->
+        <section class="slide" id="slide-18">
+            <div class="slide-category"><i class="fas fa-toolbox"></i> Command Arsenal // Category 7</div>
+            <h2 class="slide-title">Data Extraction, Archives & Networking</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">data_and_strings.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold">// Binary Inspection & Base64</p>
+                        <p><code class="text-white">strings &lt;binary&gt;</code> : Extract printable human ASCII strings from compiled files or memory dumps</p>
+                        <p><code class="text-white">base64 &lt;file&gt;</code> : Encode data to Base64 ASCII</p>
+                        <p><code class="text-white">base64 -d &lt;file&gt;</code> : Decode Base64 data (Base64 is an encoding, NOT encryption!)</p>
+                    </div>
+                </div>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-gray-400">archives_and_net.sh</span>
+                        <button class="copy-btn"><i class="far fa-copy"></i> COPY</button>
+                    </div>
+                    <div class="terminal-body text-gray-300 space-y-3">
+                        <p class="text-cyber-red font-bold">// Archives & Remote Access</p>
+                        <p><code class="text-white">tar -xzvf archive.tar.gz</code> : Extract gzip tarball</p>
+                        <p><code class="text-white">ssh -p 2220 user@host</code> : Secure Shell remote connection</p>
+                        <p><code class="text-white">curl -I http://target.com</code> : Inspect HTTP response headers</p>
+                        <p><code class="text-white">ping -c 3 8.8.8.8</code> : Test network host connectivity</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 19: OVERTHEWIRE BANDIT CHALLENGE -->
+        <section class="slide" id="slide-19">
+            <div class="slide-category"><i class="fas fa-flag"></i> Practice Lab</div>
+            <h2 class="slide-title">The Challenge: OverTheWire Bandit</h2>
+
+            <div class="space-y-5 my-auto font-mono text-xs">
+                <div class="border border-cyber-red/60 bg-black/60 p-5 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-base text-cyber-red font-bold uppercase">Assignment: Solve Levels 0 through 10</h3>
+                        <span class="tag-badge">Self-Research Lab</span>
+                    </div>
+                    <p class="text-gray-300 font-sans leading-relaxed">
+                        Now that you have the command foundations, put them to the test on <strong class="text-white">OverTheWire Bandit</strong>. Each level contains the password to log in as the next level user.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="border border-cyber-border p-4 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">1. Connection</div>
+                        <p class="text-gray-400 font-sans">Start at Level 0:</p>
+                        <code class="text-white block mt-1">ssh -p 2220 bandit0@bandit.labs.overthewire.org</code>
+                        <p class="text-gray-500 mt-1 font-sans">Password: <code class="text-gray-300">bandit0</code></p>
+                    </div>
+
+                    <div class="border border-cyber-border p-4 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">2. Methodology</div>
+                        <p class="text-gray-400 font-sans">Read each level prompt at overthewire.org. Use the commands learned today. Read the manual (<code class="text-white">man</code>) for any unfamiliar flag.</p>
+                    </div>
+
+                    <div class="border border-cyber-border p-4 bg-black/40">
+                        <div class="text-cyber-red font-bold mb-1">3. Lab Notebook</div>
+                        <p class="text-gray-400 font-sans">Document every found password and the exact command chain used. Never lose your access keys.</p>
+                    </div>
+                </div>
+
+                <div class="callout-box">
+                    <strong class="text-cyber-red">Note:</strong> Do not search for writeups or answers online. The goal is to develop problem-solving intuition and muscle memory by doing it yourself.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 20: VMWARE & KALI SETUP / WRAP-UP -->
+        <section class="slide" id="slide-20">
+            <div class="slide-category"><i class="fas fa-laptop-code"></i> Next Steps</div>
+            <h2 class="slide-title">Lab Environment Setup & Session Wrap-Up</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="space-y-4">
+                    <h3 class="text-white text-sm font-bold flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> Comprehensive Student Handout
+                    </h3>
+                    <p class="text-gray-300 font-sans leading-relaxed">
+                        Refer to your copy of <strong class="text-white">`Session1_Linux_Fundamentals.pdf`</strong>. It includes:
+                    </p>
+                    <ul class="space-y-2 text-gray-400 font-sans">
+                        <li><i class="fas fa-check text-cyber-red mr-2"></i>Complete Linux Command Reference Cheat Sheet by category</li>
+                        <li><i class="fas fa-check text-cyber-red mr-2"></i>Filesystem Hierarchy Standard (FHS) reference table</li>
+                        <li><i class="fas fa-check text-cyber-red mr-2"></i>Permissions matrix & Octal calculation guide</li>
+                        <li><i class="fas fa-check text-cyber-red mr-2"></i>Step-by-step tutorial on installing VMware Workstation & Kali Linux</li>
+                    </ul>
+                </div>
+
+                <div class="border border-cyber-border bg-black/60 p-6 flex flex-col justify-center text-center space-y-4">
+                    <div class="text-cyber-red text-4xl"><i class="fas fa-terminal"></i></div>
+                    <h3 class="text-xl font-bold text-white uppercase">Questions & Discussion</h3>
+                    <p class="text-gray-400 font-sans">
+                        Take a few minutes to ask questions before beginning the lab assignment.
+                    </p>
+                    <div class="pt-2 text-cyber-red font-mono text-xs">
+                        root@security:~# keep_curious && keep_hacking_
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Presentation Controller Bar -->
+    <footer id="nav-bar">
+        <div class="flex items-center gap-4">
+            <button class="nav-btn" id="prev-btn">
+                <i class="fas fa-chevron-left"></i> PREV
+            </button>
+            <button class="nav-btn" id="next-btn">
+                NEXT <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="slide-counter">
+                SLIDE <span id="slide-number">01</span> / <span id="total-slides">20</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <select id="slide-select" class="slide-select hidden sm:block">
+                <!-- Populated dynamically by presentation.js -->
+            </select>
+            <button class="nav-btn" id="overview-btn" title="Slide Overview (O)">
+                <i class="fas fa-th"></i> GRID
+            </button>
+            <button class="nav-btn" id="fullscreen-btn" title="Toggle Fullscreen (F)">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Slide Overview Grid Modal -->
+    <div id="overview-modal">
+        <div class="flex justify-between items-center max-w-6xl mx-auto mb-6 pb-4 border-b border-cyber-border font-mono">
+            <div class="text-lg text-white font-bold flex items-center gap-2">
+                <span class="text-cyber-red">></span> SLIDE DIRECTORY MATRIX
+            </div>
+            <button class="nav-btn" id="close-overview-btn">
+                <i class="fas fa-times"></i> CLOSE (ESC)
+            </button>
+        </div>
+        <div class="overview-grid" id="overview-grid">
+            <!-- Populated dynamically by presentation.js -->
+        </div>
+    </div>
+
+    <!-- Presentation Script -->
+    <script src="presentation.js"></script>
+</body>
+
+</html>

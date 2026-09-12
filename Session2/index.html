@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session 02: Windows Fundamentals & CLI // Yahya Zaghloul</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            black: '#050505',
+                            card: '#0e0e0e',
+                            red: '#e50914',
+                            darkred: '#8b0000',
+                            border: '#262626',
+                            text: '#e5e7eb',
+                            muted: '#9ca3af'
+                        }
+                    },
+                    fontFamily: {
+                        mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- CRT Scanline Effect Overlay -->
+    <div class="scanline-overlay"></div>
+
+    <!-- Progress Indicator Bar -->
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <!-- Presentation Slides Viewport -->
+    <main id="presentation-deck">
+
+        <!-- SLIDE 01: TITLE & MISSION BRIEFING -->
+        <section class="slide active" id="slide-01">
+            <div class="my-auto text-center space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 bg-cyber-red/10 border border-cyber-red/40 text-cyber-red font-mono text-xs uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-cyber-red animate-ping"></span>
+                    Cybersecurity Academy // Module 0x02
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-white tracking-tight uppercase font-mono">
+                    Windows Fundamentals & <br class="hidden sm:inline"><span class="text-cyber-red">PowerShell CLI</span>
+                </h1>
+
+                <p class="max-w-3xl mx-auto text-gray-400 font-mono text-xs sm:text-sm leading-relaxed">
+                    Operating System Architecture, Filesystem Internals, SAM & Authentication Mechanics, CMD vs. PowerShell Command Arsenal, and Endpoint Auditing.
+                </p>
+
+                <div class="pt-5 border-t border-cyber-border max-w-2xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-gray-400">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-terminal text-cyber-red"></i>
+                        <span>Instructor: <strong class="text-white">Yahya Zaghloul</strong> (Penetration Tester)</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fab fa-windows text-blue-500"></i>
+                        <span>Track: <span class="text-gray-300">Systems & Endpoint Security</span></span>
+                    </div>
+                </div>
+
+                <div class="callout-box max-w-2xl mx-auto text-center font-sans text-xs">
+                    🎯 <strong class="text-white">The Mission:</strong> We are exploring Windows not as casual icon clickers, but through the eyes of an engineer, penetration tester, and incident responder. 90%+ of corporate endpoints run Windows—mastering its internals is mandatory for cybersecurity!
+                </div>
+
+                <div class="text-[0.7rem] text-gray-600 font-mono">
+                    Press <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">Space</kbd> or <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">→</kbd> to navigate &bull; <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">F</kbd> for fullscreen &bull; <kbd class="px-1.5 py-0.5 bg-black border border-cyber-border text-gray-300">O</kbd> for slide matrix
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 02: FIRST CONTACT & ALIASES -->
+        <section class="slide" id="slide-02">
+            <div class="slide-category"><i class="fas fa-terminal"></i> Terminal First Contact</div>
+            <h2 class="slide-title">Open the Terminal & Friendly Aliases</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <div class="p-3 bg-black/80 border border-cyber-red/50 flex flex-col md:flex-row items-center justify-between gap-2">
+                    <div class="flex items-center gap-2 text-white font-sans text-xs">
+                        <i class="fas fa-keyboard text-cyber-red text-base"></i>
+                        <span><strong>Launch PowerShell Now:</strong> Press <kbd class="px-1.5 py-0.5 bg-neutral-800 border border-cyber-border text-white">Win + X</kbd> &rarr; Click <strong>Terminal</strong> or <strong>PowerShell</strong>!</span>
+                    </div>
+                    <code class="text-green-400 text-xs">whoami; $env:COMPUTERNAME</code>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Muscle Memory Bridge -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-blue-400 font-bold"><i class="fab fa-linux mr-1"></i> Your Linux Skills Transfer (Aliases!)</span>
+                            <span class="tag-badge tag-badge-blue">Muscle Memory</span>
+                        </div>
+                        <div class="terminal-body space-y-1.5 text-[0.74rem]">
+                            <p class="text-gray-400 font-sans">PowerShell includes built-in shortcuts so commands you already know work instantly:</p>
+                            <div class="p-1.5 bg-neutral-900 border border-cyber-border flex justify-between">
+                                <span><code class="text-yellow-400">ls</code> or <code class="text-yellow-400">dir</code></span>
+                                <span class="text-gray-400">&rarr; <strong class="text-white">Get-ChildItem</strong> (List files)</span>
+                            </div>
+                            <div class="p-1.5 bg-neutral-900 border border-cyber-border flex justify-between">
+                                <span><code class="text-yellow-400">cat</code> or <code class="text-yellow-400">type</code></span>
+                                <span class="text-gray-400">&rarr; <strong class="text-white">Get-Content</strong> (Read file)</span>
+                            </div>
+                            <div class="p-1.5 bg-neutral-900 border border-cyber-border flex justify-between">
+                                <span><code class="text-yellow-400">ps</code> or <code class="text-yellow-400">tasklist</code></span>
+                                <span class="text-gray-400">&rarr; <strong class="text-white">Get-Process</strong> (List processes)</span>
+                            </div>
+                            <div class="p-1.5 bg-neutral-900 border border-cyber-border flex justify-between">
+                                <span><code class="text-yellow-400">clear</code> or <code class="text-yellow-400">cls</code></span>
+                                <span class="text-gray-400">&rarr; <strong class="text-white">Clear-Host</strong> (Clear screen)</span>
+                            </div>
+                            <div class="p-1.5 bg-neutral-900 border border-cyber-border flex justify-between">
+                                <span><code class="text-yellow-400">cp</code> / <code class="text-yellow-400">rm</code></span>
+                                <span class="text-gray-400">&rarr; <strong class="text-white">Copy-Item</strong> / <strong class="text-white">Remove-Item</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Primitives -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-yellow-400 font-bold"><i class="fas fa-compass mr-1"></i> Navigation Primitives</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-[0.74rem]">
+                            <p class="text-gray-400"># Where am I? (pwd):</p>
+                            <p class="text-green-400">Get-Location  <span class="text-gray-500"># or just: pwd</span></p>
+
+                            <p class="text-gray-400 pt-1"># Change folder (cd):</p>
+                            <p class="text-green-400">cd C:\Users; cd ~/Desktop</p>
+
+                            <p class="text-gray-400 pt-1"># View files including hidden files:</p>
+                            <p class="text-green-400">Get-ChildItem -Force  <span class="text-gray-500"># or: ls -Force</span></p>
+
+                            <p class="text-gray-400 pt-1"># View your current identity:</p>
+                            <p class="text-green-400">whoami</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    💡 <strong class="text-white">Pro Tip:</strong> Unlike Linux, PowerShell command names are <strong>case-insensitive</strong>! <code>get-process</code>, <code>Get-Process</code>, and <code>GET-PROCESS</code> execute identically.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 03: STRINGS VS OBJECTS -->
+        <section class="slide" id="slide-03">
+            <div class="slide-category"><i class="fas fa-arrows-split-up-and-left"></i> The Big Paradigm Shift</div>
+            <h2 class="slide-title">CMD vs. PowerShell: Dumb Strings vs. Smart Objects</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Why did Microsoft invent PowerShell in 2006 when CMD already existed? The secret lies in how data moves through the terminal:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Command Prompt -->
+                    <div class="vs-card cmd space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-gray-200 flex items-center gap-2">
+                                <i class="fas fa-terminal text-gray-400"></i> Command Prompt (`cmd.exe`)
+                            </h3>
+                            <span class="tag-badge text-[0.65rem] border-gray-600 text-gray-300">Legacy (1987)</span>
+                        </div>
+                        <p class="text-gray-400 font-sans text-xs leading-relaxed">
+                            A text processor from the MS-DOS era. Commands output **dumb lines of text** (like a paper receipt). If you want specific data, you must manually count characters, slice words, or write fragile regex.
+                        </p>
+                        <div class="p-2 bg-black/80 text-[0.7rem] text-red-400 font-mono border border-cyber-border">
+                            C:\> tasklist  ➔  returns an unprogrammable wall of text strings
+                        </div>
+                    </div>
+
+                    <!-- PowerShell -->
+                    <div class="vs-card powershell space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-bold text-blue-400 flex items-center gap-2">
+                                <i class="fas fa-code text-blue-400"></i> PowerShell (`powershell.exe`)
+                            </h3>
+                            <span class="tag-badge tag-badge-blue text-[0.65rem]">Modern (.NET Engine)</span>
+                        </div>
+                        <p class="text-gray-400 font-sans text-xs leading-relaxed">
+                            Built directly on Microsoft .NET. Commands output **live, interactive objects** (like a smart toy with clickable buttons). You access any property directly with zero text parsing!
+                        </p>
+                        <div class="p-2 bg-black/80 text-[0.7rem] text-green-400 font-mono border border-cyber-border">
+                            PS C:\> (Get-Process lsass).Id  ➔  returns 640 as an integer instantly!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🧾 <strong class="text-white">The Paper Receipt vs. Smart Toy Analogy:</strong> CMD prints a paper receipt. If you want the total price, you must read line 5 and count 14 spaces. If an update shifts the table by one space, your script breaks! PowerShell hands you a smart toy where you simply ask: <code>$receipt.Total</code> and get the exact number every time!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 04: ARCHITECTURE (USER VS KERNEL MODE) -->
+        <section class="slide" id="slide-04">
+            <div class="slide-category"><i class="fas fa-layer-group"></i> Operating System Internals</div>
+            <h2 class="slide-title">Kernel Architecture: User Space (Ring 3) vs. Kernel Space (Ring 0)</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    CPUs enforce hardware-level privilege rings to prevent user applications from corrupting physical memory or crashing the machine:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- User Mode -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-blue-400 font-bold">Ring 3: User Space (The Sandbox)</span>
+                            <span class="tag-badge tag-badge-blue">Isolated Virtual Memory</span>
+                        </div>
+                        <div class="terminal-body space-y-2 font-sans text-gray-300 text-xs">
+                            <p><strong class="text-white font-mono">What lives here:</strong> Everyday apps (Chrome, Discord, Word, <code>cmd.exe</code>, <code>powershell.exe</code>).</p>
+                            <p><strong class="text-white font-mono">Virtual Memory Isolation:</strong> Each process gets its own private virtual address space. Discord cannot read Chrome's memory directly without explicit OS debug rights.</p>
+                            <p><strong class="text-white font-mono">Safe Crashes:</strong> If Chrome crashes, only Chrome closes. The operating system kernel remains completely untouched!</p>
+                        </div>
+                    </div>
+
+                    <!-- Kernel Mode -->
+                    <div class="terminal-card border-red-900/50">
+                        <div class="terminal-header">
+                            <span class="text-cyber-red font-bold">Ring 0: Kernel Space (The Core Engine)</span>
+                            <span class="tag-badge">Direct Hardware Control</span>
+                        </div>
+                        <div class="terminal-body space-y-2 font-sans text-gray-300 text-xs">
+                            <p><strong class="text-white font-mono">What lives here:</strong> Core OS executive (<code>ntoskrnl.exe</code>), Hardware Abstraction Layer (HAL), and kernel drivers (GPU, network card, antivirus filters).</p>
+                            <p><strong class="text-white font-mono">Unrestricted Power:</strong> Direct access to physical memory, CPU registers, and hardware peripherals. No permission checks inside Ring 0!</p>
+                            <p><strong class="text-white font-mono">The Fatal BSOD:</strong> A crash here causes a **Blue Screen of Death (BSOD)** to protect hardware from physical damage.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Syscall Bridge Diagram -->
+                <div class="p-3 bg-black/70 border border-cyber-border space-y-1.5 font-sans text-xs">
+                    <span class="text-white font-mono font-bold text-cyber-red"><i class="fas fa-bridge mr-1"></i> The Syscall Bridge: How Apps Talk to Hardware</span>
+                    <div class="grid md:grid-cols-4 gap-2 pt-1 font-mono text-[0.72rem] text-center">
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <span class="text-blue-400 font-bold">1. User App</span><br>Calls <code>WriteFile()</code>
+                        </div>
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <span class="text-yellow-400 font-bold">2. kernel32.dll</span><br>Subsystem API Translation
+                        </div>
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <span class="text-red-400 font-bold">3. ntdll.dll</span><br>Executes <code>SYSCALL</code> instruction
+                        </div>
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <span class="text-green-400 font-bold">4. ntoskrnl.exe</span><br>Ring 0 writes to disk
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🛡️ <strong class="text-white">Red Team Vector:</strong> Modern malware uses **BYOVD (Bring Your Own Vulnerable Driver)** to drop into Ring 0 and blind EDRs and antivirus solutions from the kernel level!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 05: FILESYSTEM & 64-BIT PARADOX -->
+        <section class="slide" id="slide-05">
+            <div class="slide-category"><i class="fas fa-folder-tree"></i> Filesystem Architecture</div>
+            <h2 class="slide-title">The Windows Filesystem (`C:\`) & The 64-Bit Paradox</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Unlike Linux's unified root (<code>/</code>), Windows organizes storage into <strong>Drive Letters</strong> (<code>C:\</code>, <code>D:\</code>) formatted with <strong>NTFS</strong> (New Technology File System):
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-3">
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-cyber-red font-bold text-xs flex items-center justify-between">
+                            <span>C:\Windows\System32</span>
+                            <span class="tag-badge text-[0.65rem]">64-Bit Core</span>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            The heart of Windows. Contains core 64-bit OS binaries (<code>cmd.exe</code>, <code>powershell.exe</code>, <code>lsass.exe</code>, <code>svchost.exe</code>) and system DLLs.
+                        </p>
+                    </div>
+
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-yellow-400 font-bold text-xs flex items-center justify-between">
+                            <span>C:\Windows\SysWOW64</span>
+                            <span class="tag-badge text-[0.65rem]">32-Bit Legacy</span>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Stands for <em>"Windows 32-bit On Windows 64-bit"</em>. Contains 32-bit binaries and DLLs so legacy software can run on 64-bit Windows.
+                        </p>
+                    </div>
+
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-blue-400 font-bold text-xs flex items-center justify-between">
+                            <span>C:\Program Files</span>
+                            <span class="tag-badge text-[0.65rem]">Protected</span>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Where 64-bit software installs. (32-bit installs in <code>Program Files (x86)</code>). Protected by strict ACLs—standard users cannot write here without UAC elevation!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-3">
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-white font-bold text-xs">C:\Users\&lt;Username&gt; (User Profiles)</div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Personal user realm: <code>Desktop</code>, <code>Documents</code>, <code>Downloads</code>, and the hidden <code>AppData</code> folder. Standard users have full write access here.
+                        </p>
+                    </div>
+
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-green-400 font-bold text-xs">Path Slash Differences</div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Linux uses forward slashes (<code>/etc/passwd</code>). Windows uses backslashes (<code>C:\Windows\System32</code>). <strong class="text-white">Pro Tip:</strong> Modern PowerShell accepts both styles interchangeably!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🤯 <strong class="text-white">The 64-Bit Paradox:</strong> Why does <code>System32</code> hold 64-bit binaries while <code>SysWOW64</code> holds 32-bit binaries? In the 1990s, legacy software had <code>C:\Windows\System32</code> hardcoded. When Microsoft transitioned to 64-bit Windows, changing that folder name would have broken thousands of enterprise programs. Microsoft preserved <code>System32</code> for native (64-bit) files and created <code>SysWOW64</code> for 32-bit emulation!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 06: FILE MANAGEMENT CMD VS PS -->
+        <section class="slide" id="slide-06">
+            <div class="slide-category"><i class="fas fa-folder-open"></i> File Operations</div>
+            <h2 class="slide-title">File Management: CMD vs. PowerShell Side-by-Side</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Whether you land on a basic CMD reverse shell or an advanced PowerShell session, here is how you manipulate files:
+                </p>
+
+                <!-- Comparison Table -->
+                <div class="border border-cyber-border bg-black/80 overflow-hidden">
+                    <table class="w-full text-left font-sans text-xs">
+                        <thead>
+                            <tr class="bg-neutral-900 border-b border-cyber-border font-mono text-[0.72rem] text-gray-400">
+                                <th class="p-2.5 w-36">Operation</th>
+                                <th class="p-2.5 text-yellow-400"><i class="fas fa-terminal mr-1"></i> CMD Command (Legacy)</th>
+                                <th class="p-2.5 text-blue-400"><i class="fas fa-code mr-1"></i> PowerShell Cmdlet (Modern)</th>
+                                <th class="p-2.5 text-green-400">PS Shortcut</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-cyber-border/60 text-[0.73rem] font-mono">
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Create Directory</td>
+                                <td class="p-2 text-yellow-300">mkdir Lab</td>
+                                <td class="p-2 text-blue-300">New-Item -ItemType Directory -Name 'Lab'</td>
+                                <td class="p-2 text-green-400">mkdir Lab</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Create Empty File</td>
+                                <td class="p-2 text-yellow-300">type nul > notes.txt</td>
+                                <td class="p-2 text-blue-300">New-Item -ItemType File -Name 'notes.txt'</td>
+                                <td class="p-2 text-green-400">ni notes.txt</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Copy File</td>
+                                <td class="p-2 text-yellow-300">copy file.txt backup.txt</td>
+                                <td class="p-2 text-blue-300">Copy-Item file.txt backup.txt</td>
+                                <td class="p-2 text-green-400">cp file.txt backup.txt</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Move / Rename</td>
+                                <td class="p-2 text-yellow-300">move file.txt old.txt</td>
+                                <td class="p-2 text-blue-300">Move-Item file.txt old.txt</td>
+                                <td class="p-2 text-green-400">mv file.txt old.txt</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Delete File</td>
+                                <td class="p-2 text-yellow-300">del file.txt</td>
+                                <td class="p-2 text-blue-300">Remove-Item file.txt</td>
+                                <td class="p-2 text-green-400">rm file.txt</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Recursive Delete</td>
+                                <td class="p-2 text-yellow-300">rmdir /s /q Lab</td>
+                                <td class="p-2 text-blue-300">Remove-Item -Path 'Lab' -Recurse -Force</td>
+                                <td class="p-2 text-green-400">rm -r -fo Lab</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🕵️ <strong class="text-white">Forensics Timestamps (Timestomping):</strong> Attackers alter file timestamps to make malware look like an old OS file. Check timestamps in PowerShell via: <code>(Get-Item notes.txt).CreationTime</code> and <code>(Get-Item notes.txt).LastWriteTime</code>!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 07: MALWARE PLAYGROUNDS & ADS -->
+        <section class="slide" id="slide-07">
+            <div class="slide-category"><i class="fas fa-biohazard"></i> Threat Hunting & Forensics</div>
+            <h2 class="slide-title">Where Malware Hides & Alternate Data Streams (ADS)</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Because standard users cannot write to <code>C:\Windows</code> or <code>C:\Program Files</code>, 90%+ of malware targets these specific unprivileged staging grounds:
+                </p>
+
+                <div class="grid md:grid-cols-3 gap-3">
+                    <!-- AppData Roaming -->
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1.5">
+                        <div class="text-yellow-400 font-bold flex items-center justify-between">
+                            <span>AppData\Roaming</span>
+                            <i class="fas fa-network-wired text-xs"></i>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Follows user accounts across corporate Active Directory domains. Stores browser sessions, Discord tokens, crypto wallets, and persistence scripts.
+                        </p>
+                        <div class="text-[0.68rem] text-gray-500 font-mono">Env: <code>%APPDATA%</code></div>
+                    </div>
+
+                    <!-- AppData Local & Temp -->
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1.5">
+                        <div class="text-cyber-red font-bold flex items-center justify-between">
+                            <span>AppData\Local\Temp</span>
+                            <i class="fas fa-bomb text-xs"></i>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            <strong class="text-white">The #1 Dropper Haven!</strong> World-writable by standard users AND allows binary execution. Phishing payloads and ransomware unpack here.
+                        </p>
+                        <div class="text-[0.68rem] text-gray-500 font-mono">Env: <code>%TEMP%</code></div>
+                    </div>
+
+                    <!-- Users Public -->
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1.5">
+                        <div class="text-blue-400 font-bold flex items-center justify-between">
+                            <span>C:\Users\Public</span>
+                            <i class="fas fa-users text-xs"></i>
+                        </div>
+                        <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                            Shared folder accessible by EVERY local and domain account on the machine. Hackers use it as a staging directory for cross-user privilege escalation.
+                        </p>
+                        <div class="text-[0.68rem] text-gray-500 font-mono">Env: <code>%PUBLIC%</code></div>
+                    </div>
+                </div>
+
+                <!-- Alternate Data Streams (ADS) -->
+                <div class="p-3 bg-black/80 border border-cyber-border space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="text-white font-bold text-xs flex items-center gap-2 font-mono">
+                            <i class="fas fa-ghost text-cyber-red"></i> The False-Bottom Drawer: Alternate Data Streams (ADS)
+                        </span>
+                        <span class="tag-badge text-[0.65rem]">Stealth Storage</span>
+                    </div>
+                    <p class="text-gray-300 font-sans text-xs">
+                        NTFS allows files to store multiple hidden data streams behind the default stream. Attackers hide executable payloads inside ordinary text files!
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-2 text-[0.7rem] font-mono">
+                        <div class="p-1.5 bg-neutral-900 border border-cyber-border text-red-400">
+                            # Hide evil.exe behind innocent report.txt:<br>
+                            <code>type payload.exe > report.txt:malware.exe</code>
+                        </div>
+                        <div class="p-1.5 bg-neutral-900 border border-cyber-border text-green-400">
+                            # Audit & detect hidden streams in PowerShell:<br>
+                            <code>Get-Item report.txt -Stream *</code> (or in CMD: <code>dir /r</code>)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🚨 <strong class="text-white">Incident Response Priority:</strong> When investigating a compromised Windows machine, the first 3 directories to inspect are <code>%TEMP%</code>, <code>%APPDATA%</code>, and <code>C:\Users\Public</code>.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 08: SAM ARCHITECTURE & AUTHENTICATION -->
+        <section class="slide" id="slide-08">
+            <div class="slide-category"><i class="fas fa-key"></i> Identity & Access Architecture</div>
+            <h2 class="slide-title">The SAM Vault & Windows Authentication Pipeline</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Where are local user accounts and passwords stored in Windows, and how does the operating system authenticate you?
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- What is SAM -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-yellow-400 font-bold">The SAM Vault</span>
+                            <span class="tag-badge">C:\Windows\System32\config\SAM</span>
+                        </div>
+                        <div class="terminal-body space-y-2 font-sans text-gray-300 text-xs">
+                            <p><strong class="text-white font-mono">Security Account Manager:</strong> The encrypted registry database storing all local user accounts, group memberships, and password hashes.</p>
+                            <p><strong class="text-cyber-red font-mono">The Kernel Lock:</strong> Locked exclusively by the kernel (<code>SYSTEM</code> account). Even the local <strong>Administrator</strong> cannot open, copy, or read the SAM file while Windows is running!</p>
+                            <p><strong class="text-white font-mono">NTLM Hashes:</strong> Windows NEVER stores plaintext passwords in the SAM! It stores the <strong>NTLM hash</strong> (<code>MD4(UTF-16LE(password))</code>).</p>
+                        </div>
+                    </div>
+
+                    <!-- The Authentication Chain -->
+                    <div class="terminal-card border-blue-900/50">
+                        <div class="terminal-header">
+                            <span class="text-blue-400 font-bold">The LSASS Bouncer</span>
+                            <span class="tag-badge tag-badge-blue">winlogon &rarr; lsass</span>
+                        </div>
+                        <div class="terminal-body space-y-2 font-sans text-gray-300 text-xs">
+                            <p><strong class="text-white font-mono">1. Logon Prompt:</strong> <code>winlogon.exe</code> captures user credentials and passes them to the security authority.</p>
+                            <p><strong class="text-white font-mono">2. LSASS Engine:</strong> <code>lsass.exe</code> (Local Security Authority Subsystem Service) computes the NTLM hash and compares it to the SAM database.</p>
+                            <p><strong class="text-white font-mono">3. Access Token Minter:</strong> If valid, LSASS creates your **Access Token** containing your digital identity (SIDs) and privileges!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Local vs Domain Comparison -->
+                <div class="p-3 bg-black/80 border border-cyber-border space-y-1.5 font-sans text-xs">
+                    <span class="text-white font-mono font-bold text-cyber-red">// Local Workstation vs. Enterprise Domain Authentication</span>
+                    <div class="grid md:grid-cols-2 gap-2 text-[0.73rem] font-mono text-gray-300">
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <strong class="text-yellow-400">Local Machine (Standalone):</strong><br>
+                            Auth validated locally against the SAM file (<code>C:\Windows\System32\config\SAM</code>).
+                        </div>
+                        <div class="p-2 bg-neutral-900 border border-cyber-border">
+                            <strong class="text-blue-400">Active Directory Domain (Enterprise):</strong><br>
+                            Auth validated over the network by a Domain Controller via Kerberos against <code>NTDS.dit</code>!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🔓 <strong class="text-white">Offensive Vector:</strong> Because the kernel locks SAM, attackers extract it using <strong>Volume Shadow Copies</strong> (<code>vssadmin create shadow /for=C:</code>) to snapshot the locked disk, or dump LSASS memory with Mimikatz.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 09: SIDS & ACCESS TOKENS -->
+        <section class="slide" id="slide-09">
+            <div class="slide-category"><i class="fas fa-id-card"></i> Security Identifiers & Tokens</div>
+            <h2 class="slide-title">Security Identifiers (SIDs) & Access Token Anatomy</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Windows does NOT care about your human username. Internally, every account, group, and process is identified by an immutable <strong>Security Identifier (SID)</strong>:
+                </p>
+
+                <!-- SID Breakdown -->
+                <div class="p-3 bg-black/80 border border-cyber-border space-y-2">
+                    <div class="text-cyber-red font-bold text-xs uppercase font-mono">
+                        Anatomy of a Security Identifier (SID):
+                    </div>
+                    <div class="p-2.5 bg-neutral-950 border border-cyber-border text-center font-mono text-xs sm:text-sm text-gray-200">
+                        <span class="text-gray-400">S</span> - 
+                        <span class="text-blue-400" title="Revision">1</span> - 
+                        <span class="text-yellow-400" title="Authority (NT Authority)">5</span> - 
+                        <span class="text-gray-400" title="Sub-authority (Domain/Machine ID)">21-3623811015-3361044348-30300820</span> - 
+                        <span class="text-cyber-red font-bold text-base" title="Relative ID (RID)">500</span>
+                    </div>
+                    <div class="grid md:grid-cols-4 gap-2 text-[0.7rem] font-sans text-gray-400">
+                        <div><strong class="text-gray-300 font-mono">S-1:</strong> SID Prefix & Revision level 1</div>
+                        <div><strong class="text-yellow-400 font-mono">5:</strong> NT Authority identifier</div>
+                        <div><strong class="text-gray-300 font-mono">21-...:</strong> Unique Machine or Domain ID</div>
+                        <div><strong class="text-cyber-red font-mono">500 (RID):</strong> Relative Identifier (The Account!)</div>
+                    </div>
+                </div>
+
+                <!-- Critical Well-Known RIDs -->
+                <div class="grid md:grid-cols-3 gap-3">
+                    <div class="border border-cyber-red/60 bg-black/70 p-3 space-y-1">
+                        <div class="text-cyber-red font-bold text-xs flex justify-between items-center">
+                            <span>RID 500</span>
+                            <span class="tag-badge text-[0.65rem]">GOD MODE</span>
+                        </div>
+                        <h4 class="text-white font-bold text-xs">Built-in Administrator</h4>
+                        <p class="text-gray-400 font-sans text-[0.72rem]">Always the built-in local Administrator, even if renamed to hide it!</p>
+                    </div>
+
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-yellow-400 font-bold text-xs flex justify-between items-center">
+                            <span>RID 501</span>
+                            <span class="tag-badge text-[0.65rem]">DISABLED</span>
+                        </div>
+                        <h4 class="text-white font-bold text-xs">Built-in Guest</h4>
+                        <p class="text-gray-400 font-sans text-[0.72rem]">Default guest account for unauthenticated visitors. Disabled by default.</p>
+                    </div>
+
+                    <div class="border border-cyber-border bg-black/70 p-3 space-y-1">
+                        <div class="text-blue-400 font-bold text-xs flex justify-between items-center">
+                            <span>RID 1000+</span>
+                            <span class="tag-badge text-[0.65rem]">USER REALM</span>
+                        </div>
+                        <h4 class="text-white font-bold text-xs">Standard & Custom Users</h4>
+                        <p class="text-gray-400 font-sans text-[0.72rem]">First created user gets RID 1000, next gets 1001, and so forth.</p>
+                    </div>
+                </div>
+
+                <!-- Audit Token Commands -->
+                <div class="p-2.5 bg-black/70 border border-cyber-border flex flex-col md:flex-row justify-between items-center gap-2 text-[0.72rem] font-mono">
+                    <div class="text-gray-300">
+                        <strong class="text-white">Token Recon Primitives:</strong>
+                    </div>
+                    <div class="flex gap-2">
+                        <code class="p-1 bg-neutral-900 border border-cyber-border text-green-400">whoami /user</code> (View SID)
+                        <code class="p-1 bg-neutral-900 border border-cyber-border text-yellow-400">whoami /priv</code> (View Privileges)
+                        <code class="p-1 bg-neutral-900 border border-cyber-border text-blue-400">whoami /groups</code> (View Groups)
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 10: DUAL COMMAND ARSENAL (RECON & NETWORKING) -->
+        <section class="slide" id="slide-10">
+            <div class="slide-category"><i class="fas fa-toolbox"></i> Command Arsenal</div>
+            <h2 class="slide-title">System Recon, Users & Networking: CMD vs. PowerShell</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    In real penetration testing and incident response, you need to know both the CMD binary commands and modern PowerShell cmdlets:
+                </p>
+
+                <!-- Comparison Table -->
+                <div class="border border-cyber-border bg-black/80 overflow-hidden">
+                    <table class="w-full text-left font-sans text-xs">
+                        <thead>
+                            <tr class="bg-neutral-900 border-b border-cyber-border font-mono text-[0.72rem] text-gray-400">
+                                <th class="p-2.5 w-40">Auditing Mission</th>
+                                <th class="p-2.5 text-yellow-400"><i class="fas fa-terminal mr-1"></i> CMD Approach</th>
+                                <th class="p-2.5 text-blue-400"><i class="fas fa-code mr-1"></i> PowerShell Approach</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-cyber-border/60 text-[0.73rem] font-mono">
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">List Local Users</td>
+                                <td class="p-2 text-yellow-300">net user</td>
+                                <td class="p-2 text-blue-300">Get-LocalUser</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Who has Admin rights?</td>
+                                <td class="p-2 text-yellow-300">net localgroup administrators</td>
+                                <td class="p-2 text-blue-300">Get-LocalGroupMember Administrators</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Check Privileges</td>
+                                <td class="p-2 text-yellow-300">whoami /priv</td>
+                                <td class="p-2 text-blue-300">whoami /priv  <span class="text-gray-400 font-sans">(Look for SeImpersonatePrivilege!)</span></td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">IP & Network Config</td>
+                                <td class="p-2 text-yellow-300">ipconfig /all</td>
+                                <td class="p-2 text-blue-300">Get-NetIPAddress | select IPAddress, InterfaceAlias</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Active Ports / Sockets</td>
+                                <td class="p-2 text-yellow-300">netstat -ano</td>
+                                <td class="p-2 text-blue-300">Get-NetTCPConnection -State Listen</td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Test Port Connection</td>
+                                <td class="p-2 text-yellow-300">ping 10.10.10.5</td>
+                                <td class="p-2 text-blue-300">Test-NetConnection 10.10.10.5 -Port 80  <span class="text-gray-400">(tnc)</span></td>
+                            </tr>
+                            <tr class="hover:bg-neutral-900/50">
+                                <td class="p-2 font-bold text-white font-sans">Environment Variables</td>
+                                <td class="p-2 text-yellow-300">set</td>
+                                <td class="p-2 text-blue-300">Get-ChildItem env:  <span class="text-gray-400">(or: $env:COMPUTERNAME)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🥔 <strong class="text-white">Potato Exploits:</strong> If <code>whoami /priv</code> displays <code>SeImpersonatePrivilege</code> enabled, an attacker can use tools like <em>GodPotato</em> or <em>JuicyPotato</em> to immediately escalate from a low service account to <strong>NT AUTHORITY\SYSTEM</strong>!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 11: THE OBJECT PIPELINE & CONVEYOR BELT -->
+        <section class="slide" id="slide-11">
+            <div class="slide-category"><i class="fas fa-arrows-split-up-and-left"></i> The Pipeline</div>
+            <h2 class="slide-title">The Object Pipeline & The Conveyor Belt (`$_`)</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    The pipe (<code>|</code>) sends live objects down a conveyor belt. Instead of writing messy regex to parse strings, you filter and sort structured properties directly:
+                </p>
+
+                <div class="terminal-card">
+                    <div class="terminal-header">
+                        <span class="text-white font-bold"><i class="fas fa-conveyor-belt text-cyber-red mr-2"></i>Pipeline Masterclass: The Core 4 Cmdlets</span>
+                    </div>
+                    <div class="terminal-body space-y-2.5 text-[0.74rem]">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <p class="text-yellow-400 font-bold">1. Where-Object (?): The Conveyor Belt Scanner</p>
+                                <p class="text-gray-400"># Filter processes using more than 100MB of RAM:</p>
+                                <p class="text-green-400">Get-Process | Where-Object WS -gt 100MB</p>
+                                <p class="text-gray-400"># Using the $_ variable ("this specific item on the belt"):</p>
+                                <p class="text-green-400">Get-Service | Where-Object { $_.Status -eq 'Running' }</p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <p class="text-blue-400 font-bold">2. Sort-Object (sort): The Organizer</p>
+                                <p class="text-gray-400"># Sort processes descending by memory consumption:</p>
+                                <p class="text-green-400">Get-Process | Sort-Object -Descending WS</p>
+
+                                <p class="text-blue-400 font-bold pt-1">3. Select-Object (select): Column Chooser</p>
+                                <p class="text-gray-400"># Pick specific columns and top 3 rows:</p>
+                                <p class="text-green-400">Get-Process | Select-Object -First 3 Name, Id, WS</p>
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-t border-cyber-border">
+                            <span class="text-cyber-red font-bold">4. Measure-Object (measure): The Counter</span>
+                            <div class="grid md:grid-cols-2 gap-2 pt-1">
+                                <p class="text-gray-400">Count lines in a file (like wc -l):<br><code class="text-white">Get-Content auth.log | Measure-Object -Line</code></p>
+                                <p class="text-gray-400">Count total files on Desktop:<br><code class="text-white">(Get-ChildItem Desktop).Count</code></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    ⚙️ <strong class="text-white font-mono">Comparison Operators:</strong> PowerShell uses text operators: <code>-eq</code> (equal), <code>-ne</code> (not equal), <code>-gt</code> (greater than), <code>-lt</code> (less than), <code>-like</code> (wildcard), and <code>-match</code> (regex).
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 12: READING & PATTERN SEARCHING (GREP) -->
+        <section class="slide" id="slide-12">
+            <div class="slide-category"><i class="fas fa-magnifying-glass"></i> File Inspection</div>
+            <h2 class="slide-title">Reading & Pattern Searching: PowerShell's `grep`</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Inspecting log files, hunting credentials in config files, and searching patterns across directories:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Reading Files -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-yellow-400 font-bold">Reading Content: Get-Content (cat)</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-[0.74rem]">
+                            <p class="text-gray-400"># Read full file contents (like cat / type):</p>
+                            <p class="text-green-400">Get-Content C:\Logs\auth.log  <span class="text-gray-500"># or: cat auth.log</span></p>
+
+                            <p class="text-gray-400 pt-1"># Read first 5 lines (like head -n 5):</p>
+                            <p class="text-green-400">Get-Content auth.log -TotalCount 5</p>
+
+                            <p class="text-gray-400 pt-1"># Read last 10 lines (like tail -n 10):</p>
+                            <p class="text-green-400">Get-Content auth.log -Tail 10</p>
+
+                            <p class="text-gray-400 pt-1"># Live stream log updates (like tail -f!):</p>
+                            <p class="text-green-400">Get-Content auth.log -Tail 10 -Wait</p>
+                        </div>
+                    </div>
+
+                    <!-- Searching Patterns -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-blue-400 font-bold">Pattern Searching: findstr vs. Select-String</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-[0.74rem]">
+                            <p class="text-gray-400"># In CMD (Legacy):</p>
+                            <p class="text-yellow-300">findstr /i "failed" auth.log</p>
+
+                            <p class="text-gray-400 pt-1"># In PowerShell (PowerShell's grep!):</p>
+                            <p class="text-green-400">Select-String -Path auth.log -Pattern "Failed"</p>
+
+                            <p class="text-gray-400 pt-1"># Search across all .txt files recursively:</p>
+                            <p class="text-green-400">Select-String -Path *.txt -Pattern "password"</p>
+
+                            <p class="text-gray-400 pt-1"># Pipe Get-Content into Select-String:</p>
+                            <p class="text-green-400">Get-Content config.ini | Select-String "api_key"</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    🔍 <strong class="text-white">Log Monitoring Tip:</strong> <code>Get-Content -Wait</code> functions like Linux <code>tail -f</code>, allowing security analysts to watch authentication logs in real-time as brute-force attacks unfold.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 13: UNDERSTANDING SERVICES & THE REGISTRY -->
+        <section class="slide" id="slide-13">
+            <div class="slide-category"><i class="fas fa-gears"></i> Core Windows Engines</div>
+            <h2 class="slide-title">Core Windows Engines: What Are Services & The Registry?</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Before auditing threat persistence, understand the two invisible internal engines that power how Windows boots, operates, and remembers settings:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- What is a Windows Service? -->
+                    <div class="border border-cyber-border bg-black/70 p-4 space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-cyber-border pb-2">
+                            <span class="text-yellow-400 font-bold text-sm flex items-center gap-2">
+                                <i class="fas fa-cogs"></i> 1. Windows Services
+                            </span>
+                            <span class="tag-badge text-[0.65rem]">Background Workers</span>
+                        </div>
+                        <ul class="space-y-1.5 text-[0.74rem] text-gray-300 font-sans">
+                            <li>
+                                <strong class="text-white font-mono">What is it?</strong> A long-running program that executes headless in the background <strong>without a user interface (no window, no desktop)</strong>.
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">Who manages them?</strong> Supervised and controlled by the <strong class="text-yellow-400">Service Control Manager (SCM)</strong> (<code>services.exe</code>).
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">When do they run?</strong> Boot automatically at machine startup, <strong class="text-yellow-300">before any user even logs in</strong>!
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">Privilege Level:</strong> Usually runs under <code class="text-cyber-red">NT AUTHORITY\SYSTEM</code> (local God mode)!
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">Real-world Examples:</strong> <code>WinDefend</code> (Defender Antivirus), <code>wuauserv</code> (Windows Update), <code>Spooler</code> (Print Spooler).
+                            </li>
+                        </ul>
+                        <div class="p-2 bg-yellow-500/10 border border-yellow-500/30 text-[0.7rem] text-yellow-200 font-sans">
+                            🏢 <strong>Mental Model:</strong> Like a skyscraper's electrical generators and water pumps in the basement — running 24/7 silently even when the offices are empty.
+                        </div>
+                    </div>
+
+                    <!-- What is the Windows Registry? -->
+                    <div class="border border-cyber-border bg-black/70 p-4 space-y-2.5">
+                        <div class="flex items-center justify-between border-b border-cyber-border pb-2">
+                            <span class="text-cyber-red font-bold text-sm flex items-center gap-2">
+                                <i class="fas fa-database"></i> 2. The Windows Registry
+                            </span>
+                            <span class="tag-badge text-[0.65rem]">Central Database</span>
+                        </div>
+                        <ul class="space-y-1.5 text-[0.74rem] text-gray-300 font-sans">
+                            <li>
+                                <strong class="text-white font-mono">What is it?</strong> A centralized hierarchical database storing all OS, driver, hardware, software, and user configurations.
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">Linux vs. Windows:</strong> Replaces thousands of scattered Linux <code>/etc/*.conf</code> text files with one master database!
+                            </li>
+                            <li>
+                                <strong class="text-white font-mono">Hierarchy:</strong> <strong>Hives</strong> &rarr; <strong>Keys</strong> (like folders) &rarr; <strong>Values</strong> (Name, Type, Data).
+                            </li>
+                            <li>
+                                <strong class="text-cyber-red font-mono">HKLM (Local Machine):</strong> Global system settings for all users (Writing requires Administrator / UAC).
+                            </li>
+                            <li>
+                                <strong class="text-blue-400 font-mono">HKCU (Current User):</strong> Settings specific to the logged-in user (<span class="text-green-400">Standard user can write freely!</span>).
+                            </li>
+                        </ul>
+                        <div class="p-2 bg-cyber-red/10 border border-cyber-red/30 text-[0.7rem] text-gray-300 font-sans">
+                            🧬 <strong>Mental Model:</strong> The central DNA & master rulebook of Windows — every time the OS or an app does anything, it looks up the Registry first.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threat Connection Callout -->
+                <div class="callout-box font-sans text-xs">
+                    🔗 <strong class="text-white">The Persistence Connection:</strong> Attackers abuse <strong>Services</strong> to gain SYSTEM privilege and survive reboots, and abuse <strong>Registry Run Keys</strong> (in <code>HKCU</code> or <code>HKLM</code>) to auto-launch malware whenever a user logs in!
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 14: SERVICES & REGISTRY PERSISTENCE AUDITING -->
+        <section class="slide" id="slide-14">
+            <div class="slide-category"><i class="fas fa-gears"></i> Core Windows Engines</div>
+            <h2 class="slide-title">Services & The Registry: Threat Persistence Auditing</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <p class="text-gray-300 font-sans text-xs">
+                    Now that you understand Services & Registry, here is how malware establishes persistence and how to audit it:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <!-- Services -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-yellow-400 font-bold"><i class="fas fa-cogs mr-1"></i> Windows Services (Background Workers)</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-[0.74rem]">
+                            <p class="text-gray-400"># CMD service query:</p>
+                            <p class="text-yellow-300">sc query state= all</p>
+
+                            <p class="text-gray-400 pt-1"># PowerShell service auditing:</p>
+                            <p class="text-green-400">Get-Service | Where-Object Status -eq 'Running'</p>
+
+                            <p class="text-gray-400 pt-1"># Start / Stop / Restart:</p>
+                            <p class="text-green-400">Restart-Service -Name Spooler</p>
+
+                            <p class="text-gray-400 pt-1 font-sans text-[0.7rem]">
+                                <strong class="text-white">Security Risk:</strong> Services run as <code>NT AUTHORITY\SYSTEM</code> (local God mode)!
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Registry PSDrives -->
+                    <div class="terminal-card">
+                        <div class="terminal-header">
+                            <span class="text-cyber-red font-bold"><i class="fas fa-database mr-1"></i> Registry Persistence (Run Keys)</span>
+                        </div>
+                        <div class="terminal-body space-y-2 text-[0.74rem]">
+                            <p class="text-gray-400"># Browse the Registry like a hard drive (PSDrive!):</p>
+                            <p class="text-green-400">cd HKCU:\Software; dir</p>
+
+                            <p class="text-gray-400 pt-1"># Audit user startup persistence keys:</p>
+                            <p class="text-green-400">Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'</p>
+
+                            <p class="text-gray-400 pt-1"># Audit system-wide machine startup keys:</p>
+                            <p class="text-green-400">Get-ItemProperty 'HKLM:\Software\Microsoft\Windows\CurrentVersion\Run'</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-box font-sans text-xs">
+                    📌 <strong class="text-white">Persistence Forensics:</strong> The <code>...\CurrentVersion\Run</code> and <code>RunOnce</code> registry keys are the single most common startup locations abused by malware to survive reboots.
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 15: LIVE GAME: TEAM CMD VS. TEAM POWERSHELL -->
+        <section class="slide" id="slide-15">
+            <div class="slide-category"><i class="fas fa-gamepad"></i> In-Session Classroom Duel</div>
+            <h2 class="slide-title">⚔️ Game Time: Team CMD vs. Team PowerShell!</h2>
+
+            <div class="space-y-4 my-auto font-mono text-xs">
+                <!-- Battle Arena Top Banner & Live Timer -->
+                <div class="p-3.5 bg-cyber-red/10 border border-cyber-red flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-2.5">
+                        <span class="text-cyber-red text-2xl animate-pulse"><i class="fas fa-stopwatch-20"></i></span>
+                        <div>
+                            <span class="text-white font-bold text-sm tracking-wider uppercase font-mono">Arena Challenge: 60-Second Terminal Showdown</span>
+                            <p class="text-gray-400 font-sans text-xs">Left Room: <strong class="text-yellow-400">Team CMD</strong> vs. Right Room: <strong class="text-blue-400">Team PowerShell</strong></p>
+                        </div>
+                    </div>
+                    <!-- Interactive Countdown Timer Controls -->
+                    <div class="flex items-center gap-2">
+                        <div id="game-timer-display" class="px-3.5 py-1 bg-black border-2 border-cyber-red text-cyber-red font-mono text-xl font-bold tracking-widest min-w-[75px] text-center shadow-[0_0_10px_rgba(229,9,20,0.4)]">
+                            60s
+                        </div>
+                        <button id="game-timer-btn" type="button" class="px-3 py-1.5 bg-cyber-red text-white font-bold text-xs hover:bg-red-700 transition uppercase tracking-wider flex items-center gap-1">
+                            <i class="fas fa-play"></i> <span>Start</span>
+                        </button>
+                        <button id="game-reset-btn" type="button" class="px-2.5 py-1.5 bg-neutral-800 text-gray-300 font-bold text-xs hover:bg-neutral-700 transition" title="Reset Timer">
+                            <i class="fas fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Two Opposing Team Arenas (No Solutions, Empty Slots!) -->
+                <div class="grid md:grid-cols-2 gap-4 font-sans">
+                    <!-- Team CMD Arena -->
+                    <div class="border-2 border-yellow-500/40 bg-black/80 p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-yellow-500/20 border-b border-l border-yellow-500/40 text-yellow-400 font-mono text-[0.65rem] font-bold uppercase tracking-wider">
+                            Left Room
+                        </div>
+                        <div class="flex items-center gap-2 text-yellow-400 font-bold text-base font-mono">
+                            <i class="fas fa-terminal"></i> TEAM CMD
+                        </div>
+                        <p class="text-gray-300 text-xs leading-relaxed">
+                            Defend the 1987 DOS command prompt! Work together as a team to brainstorm and write down <strong>5 fundamental differences</strong> about how CMD works:
+                        </p>
+                        <div class="space-y-1.5 font-mono text-[0.72rem]">
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-yellow-400 font-bold">[ 1 ]</span> Difference 1: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-yellow-400 font-bold">[ 2 ]</span> Difference 2: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-yellow-400 font-bold">[ 3 ]</span> Difference 3: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-yellow-400 font-bold">[ 4 ]</span> Difference 4: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-yellow-400 font-bold">[ 5 ]</span> Difference 5: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Team PowerShell Arena -->
+                    <div class="border-2 border-blue-500/40 bg-black/80 p-4 space-y-3 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 px-2.5 py-0.5 bg-blue-500/20 border-b border-l border-blue-500/40 text-blue-400 font-mono text-[0.65rem] font-bold uppercase tracking-wider">
+                            Right Room
+                        </div>
+                        <div class="flex items-center gap-2 text-blue-400 font-bold text-base font-mono">
+                            <i class="fas fa-microchip"></i> TEAM POWERSHELL
+                        </div>
+                        <p class="text-gray-300 text-xs leading-relaxed">
+                            Defend the modern .NET object shell! Work together as a team to brainstorm and write down <strong>5 fundamental differences</strong> about how PowerShell works:
+                        </p>
+                        <div class="space-y-1.5 font-mono text-[0.72rem]">
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-blue-400 font-bold">[ 1 ]</span> Difference 1: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-blue-400 font-bold">[ 2 ]</span> Difference 2: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-blue-400 font-bold">[ 3 ]</span> Difference 3: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-blue-400 font-bold">[ 4 ]</span> Difference 4: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                            <div class="p-2 bg-neutral-900 border border-neutral-800 text-gray-400 flex items-center gap-2">
+                                <span class="text-blue-400 font-bold">[ 5 ]</span> Difference 5: <span class="text-neutral-600">__________________________________________</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Rules & Prompts (Guiding themes without giving away answers!) -->
+                <div class="grid md:grid-cols-3 gap-3 font-sans text-xs">
+                    <div class="p-2.5 bg-black/60 border border-cyber-border space-y-1">
+                        <div class="text-white font-bold font-mono text-[0.72rem] text-cyber-red uppercase flex items-center gap-1.5">
+                            <i class="fas fa-bullseye"></i> The Mission
+                        </div>
+                        <p class="text-gray-400 text-[0.7rem] leading-relaxed">
+                            Each team has <strong>60 seconds</strong> to collaborate and write 5 accurate architectural differences on paper or whiteboard.
+                        </p>
+                    </div>
+
+                    <div class="p-2.5 bg-black/60 border border-cyber-border space-y-1">
+                        <div class="text-white font-bold font-mono text-[0.72rem] text-yellow-400 uppercase flex items-center gap-1.5">
+                            <i class="fas fa-lightbulb"></i> Battleground Angles
+                        </div>
+                        <p class="text-gray-400 text-[0.7rem] leading-relaxed">
+                            Consider: <em>Data pipeline & output</em>, <em>command grammar</em>, <em>underlying runtime</em>, <em>error handling</em>, and <em>security policies</em>!
+                        </p>
+                    </div>
+
+                    <div class="p-2.5 bg-black/60 border border-cyber-border space-y-1">
+                        <div class="text-white font-bold font-mono text-[0.72rem] text-green-400 uppercase flex items-center gap-1.5">
+                            <i class="fas fa-trophy"></i> Victory Condition
+                        </div>
+                        <p class="text-gray-400 text-[0.7rem] leading-relaxed">
+                            The first team to submit and verbally defend 5 accurate, unique differences to the instructor wins the championship!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 16: UNDERTHEWIRE CENTURY ROADMAP -->
+        <section class="slide" id="slide-16">
+            <div class="slide-category"><i class="fas fa-trophy"></i> Practical Assignment</div>
+            <h2 class="slide-title">Assignment: UnderTheWire Century (01–10)</h2>
+
+            <div class="grid md:grid-cols-2 gap-6 my-auto font-mono text-xs">
+                <div class="space-y-3 font-sans">
+                    <div class="callout-box font-mono text-xs">
+                        <div class="text-white font-bold mb-1">
+                            <i class="fas fa-terminal text-cyber-red mr-1"></i> SSH Connection Command:
+                        </div>
+                        <code class="text-green-400 select-all">ssh century1@century.underthewire.org -p 22</code><br>
+                        <span class="text-gray-400 text-[0.7rem]">Level 1 Password: <strong class="text-white">century1</strong></span>
+                    </div>
+
+                    <h4 class="text-white font-bold font-mono text-sm flex items-center gap-2">
+                        <span class="text-cyber-red">//</span> Skills Tested Across Level Tiers:
+                    </h4>
+                    <ul class="space-y-1.5 text-[0.75rem] text-gray-300">
+                        <li><strong class="text-cyber-red font-mono">Century 1 &rarr; 2:</strong> User profile navigation &amp; file inspection.</li>
+                        <li><strong class="text-cyber-red font-mono">Century 2 &rarr; 3:</strong> Determining file quantities in target directories.</li>
+                        <li><strong class="text-cyber-red font-mono">Century 3 &rarr; 4:</strong> Discovering &amp; inspecting hidden directory assets.</li>
+                        <li><strong class="text-cyber-red font-mono">Century 4 &rarr; 5:</strong> Pattern matching text inside files to hunt credentials.</li>
+                        <li><strong class="text-cyber-red font-mono">Century 5 &rarr; 6:</strong> Querying operating system environment variables.</li>
+                        <li><strong class="text-cyber-red font-mono">Century 6 &rarr; 10:</strong> Advanced pipeline filtering, sorting, &amp; measuring data.</li>
+                    </ul>
+                </div>
+
+                <div class="border border-cyber-border bg-black/70 p-4 flex flex-col justify-between space-y-3">
+                    <div class="space-y-2">
+                        <div class="text-cyber-red font-bold flex items-center gap-2">
+                            <i class="fas fa-shield-halved"></i> Rules of Engagement
+                        </div>
+                        <ul class="space-y-1.5 text-gray-300 font-sans text-xs">
+                            <li>&bull; <strong class="text-white">No Public Write-ups:</strong> Build real terminal muscle memory through experimentation.</li>
+                            <li>&bull; <strong class="text-white">Chained Passwords:</strong> The password string discovered in Level <em>N</em> unlocks Level <em>N+1</em> over SSH.</li>
+                            <li>&bull; <strong class="text-white">Native Help:</strong> When unsure of syntax, run <code>Get-Help &lt;Cmdlet&gt; -Examples</code>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-2.5 bg-cyber-red/10 border border-cyber-red/40 text-[0.72rem] text-gray-300 font-sans">
+                        🎯 <strong class="text-white">Target Milestone:</strong> Complete Levels 01 through 10 before Session 3!
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 17: LIVE LEVEL 1 & LOCAL 4-POINT AUDIT -->
+        <section class="slide" id="slide-17">
+            <div class="slide-category"><i class="fas fa-flag-checkered"></i> Live Action & Wrap-Up</div>
+            <h2 class="slide-title">Live Class Kickoff & Local Machine Audit</h2>
+
+            <div class="space-y-3.5 my-auto font-mono text-xs">
+                <!-- Live Level 1 Kickoff Banner (No Spoilers!) -->
+                <div class="p-3 bg-cyber-red/15 border border-cyber-red space-y-1.5 font-sans">
+                    <div class="flex items-center justify-between">
+                        <span class="text-white font-mono font-bold text-xs"><i class="fas fa-play text-cyber-red mr-1.5"></i> Live Class Onboarding: Connect to Century 1!</span>
+                        <span class="tag-badge text-[0.65rem]">Hands-On Now</span>
+                    </div>
+                    <p class="text-gray-300 text-xs">
+                        Open your terminal now: <code>ssh century1@century.underthewire.org -p 22</code> (Password: <code>century1</code>).<br>
+                        <strong>Your Mission:</strong> Explore the system, investigate the files on the machine, extract the secret password, and log into <code>century2</code> on your own!
+                    </p>
+                </div>
+
+                <!-- Local 4-Point Checklist -->
+                <div class="grid md:grid-cols-2 gap-3">
+                    <div class="space-y-2">
+                        <h4 class="text-white font-bold text-xs flex items-center gap-1.5 font-sans">
+                            <span class="text-cyber-red">//</span> Local Machine 4-Point Audit Checklist:
+                        </h4>
+                        <div class="space-y-1.5 text-[0.72rem]">
+                            <div class="p-1.5 bg-black/70 border border-cyber-border flex justify-between">
+                                <span class="text-gray-300">1. Identity & Privileges:</span>
+                                <code class="text-green-400">whoami /user; whoami /priv</code>
+                            </div>
+                            <div class="p-1.5 bg-black/70 border border-cyber-border flex justify-between">
+                                <span class="text-gray-300">2. Local Admin Accounts:</span>
+                                <code class="text-yellow-400">Get-LocalGroupMember Administrators</code>
+                            </div>
+                            <div class="p-1.5 bg-black/70 border border-cyber-border flex justify-between">
+                                <span class="text-gray-300">3. Active Services:</span>
+                                <code class="text-blue-400">Get-Service | ? Status -eq 'Running'</code>
+                            </div>
+                            <div class="p-1.5 bg-black/70 border border-cyber-border flex justify-between">
+                                <span class="text-gray-300">4. Startup Persistence:</span>
+                                <code class="text-purple-400">Get-ItemProperty 'HKCU:\...\Run'</code>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Session Preview -->
+                    <div class="border border-cyber-border bg-black/60 p-3.5 flex flex-col justify-between space-y-2 text-center">
+                        <div class="space-y-1">
+                            <div class="text-blue-500 text-2xl"><i class="fab fa-windows"></i></div>
+                            <h3 class="text-sm font-bold text-white uppercase font-mono">Module 0x02 Complete!</h3>
+                            <p class="text-gray-400 font-sans text-[0.72rem] leading-relaxed">
+                                You now possess dual fluency in both CMD and modern PowerShell.
+                            </p>
+                        </div>
+                        <div class="p-2 bg-neutral-900 border border-cyber-border text-left text-[0.7rem] text-gray-300 font-sans space-y-0.5">
+                            <strong class="text-cyber-red font-mono">&rarr; Next Session Preview:</strong><br>
+                            <strong>Session 3:</strong> Active Directory, Enterprise Domains, Kerberos, and Network Defense!
+                        </div>
+                        <div class="text-cyber-red font-mono text-[0.68rem]">
+                            PS C:\Security> Get-Knowledge | Export-Brain -Append -Force
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Presentation Controller Bar -->
+    <footer id="nav-bar">
+        <div class="flex items-center gap-4">
+            <button class="nav-btn" id="prev-btn">
+                <i class="fas fa-chevron-left"></i> PREV
+            </button>
+            <button class="nav-btn" id="next-btn">
+                NEXT <i class="fas fa-chevron-right"></i>
+            </button>
+            <div class="slide-counter">
+                SLIDE <span id="slide-number">01</span> / <span id="total-slides">17</span>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <select id="slide-select" class="slide-select hidden sm:block">
+                <!-- Populated dynamically by presentation.js -->
+            </select>
+            <button class="nav-btn" id="overview-btn" title="Slide Overview (O)">
+                <i class="fas fa-th"></i> GRID
+            </button>
+            <button class="nav-btn" id="fullscreen-btn" title="Toggle Fullscreen (F)">
+                <i class="fas fa-expand"></i>
+            </button>
+        </div>
+    </footer>
+
+    <!-- Slide Overview Grid Modal -->
+    <div id="overview-modal">
+        <div class="flex justify-between items-center max-w-6xl mx-auto mb-6 pb-4 border-b border-cyber-border font-mono">
+            <div class="text-lg text-white font-bold flex items-center gap-2">
+                <span class="text-cyber-red">></span> SLIDE DIRECTORY MATRIX
+            </div>
+            <button class="nav-btn" id="close-overview-btn">
+                <i class="fas fa-times"></i> CLOSE (ESC)
+            </button>
+        </div>
+        <div class="overview-grid" id="overview-grid">
+            <!-- Populated dynamically by presentation.js -->
+        </div>
+    </div>
+
+    <!-- Presentation Script -->
+    <script src="presentation.js"></script>
+</body>
+
+</html>
